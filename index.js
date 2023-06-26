@@ -256,6 +256,7 @@ app.get("/team/:teamName", (req, resp) => {
   const listKey = [];
   const listValue = [];
   const listParagraph = [];
+  const listYear = [];
   const listTeamMember = [];
   const teamDetail = {};
   const dataResponse = {};
@@ -264,7 +265,6 @@ app.get("/team/:teamName", (req, resp) => {
       const html = res.data;
       const $ = cheerio.load(html);
       $('.inner-wrap').each(function () {
-        const teamTitle = $(this).find('header > .headline').text().trim();
         $(this).find('.stats > .stats-list-component > .stat-list > tbody > tr').each(function () {
           const key = $(this).find('th > span').text().trim().toLowerCase().split(' ').join('');
           const value = $(this).find('td').text().trim();
@@ -274,11 +274,31 @@ app.get("/team/:teamName", (req, resp) => {
             teamDetail[listKey[i]] = listValue[i]
           }
         }) 
-        // TODO: FIND AVATAR AND INFORMATION OF DRIVER
         $(this).find('.profile > .drivers > li').each(function () {
-          console.log($(this).text())
+          const avatar = $(this).find('.fom-adaptiveimage').attr('data-path');
+          const number = $(this).find('.driver-number > span').text().trim();
+          const name = $(this).find('.driver-name').text().trim();
+          const team = $(this).find('.driver-team > span').text().trim();
+          const teamMember = {
+            avatar,
+            number,
+            name,
+            team,
+          }
+          listTeamMember.push(teamMember);
         })
+        $(this).find('.information > .text > p').each(function () {
+          listParagraph.push($(this).text().trim())
+        });
+        $(this).find('.information > .text > h4').each(function () {
+          listYear.push($(this).text().trim());
+        });
+        dataResponse['teamDetail'] = teamDetail;
+        dataResponse['teamMember'] = listTeamMember;
+        dataResponse['listParagraph'] = listParagraph;
+        dataResponse['listYear'] = listYear;
       })
+      resp.status(200).json(dataResponse)
     })
   } catch (error) {
     resp.status(500).json(error);
