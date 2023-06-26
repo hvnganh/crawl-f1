@@ -219,10 +219,10 @@ app.get("/driver/:driverName", (req, resp) => {
     axios(urlDriver).then((res) => {
       const html = res.data;
       const $ = cheerio.load(html);
+      const driverImg = $('.inner-wrap').find('.profile > div > .driver-title > .driver-image-crop > .driver-image-crop-outer > .driver-image-crop-inner > .fom-adaptiveimage').attr('data-path');
+      const driverNumber = $('.inner-wrap').find('.profile > div > .driver-title > .driver-details > .driver-number > span').text().trim();
+      const driverFullName = $('.inner-wrap').find('.profile > div > .driver-title > .driver-details > h1').text().trim();
       $('.inner-wrap').each(function () {
-        const driverImg = $(this).find('.profile > div > .driver-title > .driver-image-crop > .driver-image-crop-outer > .driver-image-crop-inner > .fom-adaptiveimage').attr('data-path');
-        const driverNumber = $(this).find('.profile > div > .driver-title > .driver-details > .driver-number > span').text().trim();
-        const driverFullName = $(this).find('.profile > div > .driver-title > .driver-details > h1').text().trim();
         $(this).find('.stats > .stats-list-component > .stat-list > tbody > tr').each(function () {
           const key = $(this).find('th > span').text().trim().toLowerCase().split(' ').join('');
           const value = $(this).find('td').text().trim();
@@ -232,18 +232,15 @@ app.get("/driver/:driverName", (req, resp) => {
             driverDetail[listKey[i]] = listValue[i]
           }
         })
-        const bioTitle = $(this).find('.biography > .text > h3').text().trim();
         $(this).find('.biography > .text > p').each(function () {
           listParagraph.push($(this).text())
         });
-        dataResponse['driverImg'] = driverImg;
-        dataResponse['driverNumber'] = driverNumber;
-        dataResponse['driverFullName'] = driverFullName;
-        dataResponse['bioTitle'] = bioTitle;
-        dataResponse['driverDetail'] = driverDetail;
-        dataResponse['listParagraph'] = listParagraph;
-
       })
+      dataResponse['driverImg'] = driverImg;
+      dataResponse['driverNumber'] = driverNumber;
+      dataResponse['driverFullName'] = driverFullName;
+      dataResponse['driverDetail'] = driverDetail;
+      dataResponse['listParagraph'] = listParagraph;
       resp.status(200).json(dataResponse)
     })
   } catch (error) {
@@ -293,11 +290,11 @@ app.get("/team/:teamName", (req, resp) => {
         $(this).find('.information > .text > h4').each(function () {
           listYear.push($(this).text().trim());
         });
-        dataResponse['teamDetail'] = teamDetail;
-        dataResponse['teamMember'] = listTeamMember;
-        dataResponse['listParagraph'] = listParagraph;
-        dataResponse['listYear'] = listYear;
       })
+      dataResponse['teamDetail'] = teamDetail;
+      dataResponse['teamMember'] = listTeamMember;
+      dataResponse['listParagraph'] = listParagraph;
+      dataResponse['listYear'] = listYear;
       resp.status(200).json(dataResponse)
     })
   } catch (error) {
