@@ -36,8 +36,9 @@ app.get("/result/1950", (req, resp) => {
       const $ = cheerio.load(html);
       $(".table-wrap", html).each(function () {
         $(this).find('table > thead > tr > th').each(function () {
-          titles.push($(this).text());
+          titles.push($(this).text().split(' ').join(''));
         })
+
 
         const rows = [...$('table > tbody > tr')].map(e => {
           const obj = {};
@@ -70,7 +71,7 @@ app.get("/result/1951", (req, resp) => {
       const $ = cheerio.load(html);
       $(".table-wrap", html).each(function () {
         $(this).find('table > thead > tr > th').each(function () {
-          titles.push($(this).text());
+          titles.push($(this).text().split(' ').join(''));
         })
 
         const rows = [...$('table > tbody > tr')].map(e => {
@@ -103,7 +104,7 @@ app.get("/result/1952", (req, resp) => {
       const $ = cheerio.load(html);
       $(".table-wrap", html).each(function () {
         $(this).find('table > thead > tr > th').each(function () {
-          titles.push($(this).text());
+          titles.push($(this).text().split(' ').join(''));
         })
 
         const rows = [...$('table > tbody > tr')].map(e => {
