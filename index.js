@@ -173,9 +173,9 @@ app.get("/teams", (req, resp) => {
         const drivers = [];
         const rank = $(this).find('.rank').text().trim();
         const points = $(this).find('.points > div:first-child').text().trim().split('\n').join();
-        const carBrand = $(this).find('.listing-info > .name > span:nth-child(2)').text().trim();
-        const carSlug = carBrand.split(' ').join('-');
-        const imgBrand = $(this).find('.listing-info > .logo > picture > img').attr('data-src');
+        const teamName = $(this).find('.listing-info > .name > span:nth-child(2)').text().trim();
+        const carSlug = teamName.split(' ').join('-');
+        const teamImg = $(this).find('.listing-info > .logo > picture > img').attr('data-src');
         $(this).find('.listing-team-drivers').each(function () {
           $(this).find('.driver').each(function () {
             let driverObj = {};
@@ -194,8 +194,8 @@ app.get("/teams", (req, resp) => {
         const teamsObj = {
           rank,
           points,
-          carBrand,
-          imgBrand,
+          teamName,
+          teamImg,
           drivers: drivers,
           imgCar,
           carSlug,
