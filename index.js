@@ -5,10 +5,6 @@ const cheerio = require("cheerio");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 
-const url = "https://www.formula1.com";
-const urlAllResult1950 = "https://www.formula1.com/en/results.html/1950/races.html";
-const urlAllResult1951 = "https://www.formula1.com/en/results.html/1951/races.html";
-const urlAllResult1952 = "https://www.formula1.com/en/results.html/1952/races.html";
 const urlAllDrivers = 'https://www.formula1.com/en/drivers.html';
 const urlAllTeams = 'https://www.formula1.com/en/teams.html';
 
@@ -27,11 +23,12 @@ app.use(
 
 //ROUTES
 
-app.get("/result/1950", (req, resp) => {
+app.get("/result/:year", (req, resp) => {
   const titles = [];
   const results = [];
+  const url = `https://www.formula1.com/en/results.html/${req.params.year}/races.html`
   try {
-    axios(urlAllResult1950).then((res) => {
+    axios(url).then((res) => {
       const html = res.data;
       const $ = cheerio.load(html);
       $(".table-wrap", html).each(function () {
@@ -48,72 +45,6 @@ app.get("/result/1950", (req, resp) => {
             for (let i = 0; i < titles.length; i++) {
               obj[titles[i].toLowerCase()] = tempArr[i];
               
-            }
-          })
-          const firstName = $(e).find('span:first-child').text().trim();
-          const lastName = $(e).find('span:nth-child(2)').text().trim();
-          results.push({...obj, winner: firstName + ' ' + lastName});
-        });
-      });
-      resp.status(200).json(results);
-    });
-  } catch (error) {
-    resp.status(500).json(error);
-  }
-});
-
-app.get("/result/1951", (req, resp) => {
-  const titles = [];
-  const results = [];
-  try {
-    axios(urlAllResult1951).then((res) => {
-      const html = res.data;
-      const $ = cheerio.load(html);
-      $(".table-wrap", html).each(function () {
-        $(this).find('table > thead > tr > th').each(function () {
-          titles.push($(this).text().split(' ').join(''));
-        })
-
-        const rows = [...$('table > tbody > tr')].map(e => {
-          const obj = {};
-          const tempArr = [];
-          [...$(e).find('td')].map(e => {
-            tempArr.push($(e).text().trim().split('\n').join());
-            for (let i = 0; i < titles.length; i++) {
-              obj[titles[i].toLowerCase()] = tempArr[i];
-            }
-          })
-          const firstName = $(e).find('span:first-child').text().trim();
-          const lastName = $(e).find('span:nth-child(2)').text().trim();
-          results.push({...obj, winner: firstName + ' ' + lastName});
-        });
-      });
-      resp.status(200).json(results);
-    });
-  } catch (error) {
-    resp.status(500).json(error);
-  }
-});
-
-app.get("/result/1952", (req, resp) => {
-  const titles = [];
-  const results = [];
-  try {
-    axios(urlAllResult1952).then((res) => {
-      const html = res.data;
-      const $ = cheerio.load(html);
-      $(".table-wrap", html).each(function () {
-        $(this).find('table > thead > tr > th').each(function () {
-          titles.push($(this).text().split(' ').join(''));
-        })
-
-        const rows = [...$('table > tbody > tr')].map(e => {
-          const obj = {};
-          const tempArr = [];
-          [...$(e).find('td')].map(e => {
-            tempArr.push($(e).text().trim().split('\n').join());
-            for (let i = 0; i < titles.length; i++) {
-              obj[titles[i].toLowerCase()] = tempArr[i];
             }
           })
           const firstName = $(e).find('span:first-child').text().trim();
